@@ -96,11 +96,9 @@ def progress_hook(d):
 # -------------------- Main Functions --------------------
 
 def extract_video_id(url):
-    # Updated regex to handle a broader range of YouTube URLs
-    pattern = r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
+    pattern = r"(?:v=|\/(?:vi|v|e|embed)\/|youtu\.be\/|watch\?v=)([a-zA-Z0-9_-]{11})"
     match = re.search(pattern, url)
     return match.group(1) if match else None
-
 
 def show_downloader():
     st.markdown("<h1 style='text-align: center;'>🎥 YouTube Downloader</h1>", unsafe_allow_html=True)

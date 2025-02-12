@@ -1,4 +1,5 @@
 streamlit
 requests
 yt-dlp
+ffmpeg
 pillow

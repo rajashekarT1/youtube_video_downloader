@@ -29,15 +29,12 @@ def download_youtube_video(url, quality):
         selected_format = quality_map.get(quality, "medium")
 
         ydl_opts = {
-            'format': selected_format,
-            'merge_output_format': 'mp4',
-            'outtmpl': os.path.join(output_dir, "%(title)s.%(ext)s").replace(" ", "_").replace("|", "_"),
-            'progress_hooks': [progress_hook],
-            'postprocessors': [{
-                'key': 'FFmpegVideoConvertor',
-                'preferedformat': 'mp4',
-            }],
+            'format': 'bestvideo*+bestaudio/best',  # Tries to merge but falls back to a single best format
+            'outtmpl': os.path.join(output_dir, "%(title)s.%(ext)s"),
+            'merge_output_format': 'mp4',  # Remove this line if still failing
+            'postprocessors': [],  # Remove FFmpeg postprocessing
         }
+
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
@@ -99,9 +96,11 @@ def progress_hook(d):
 # -------------------- Main Functions --------------------
 
 def extract_video_id(url):
-    pattern = r"(?:v=|\/(?:vi|v|e|embed)\/|youtu\.be\/|watch\?v=)([a-zA-Z0-9_-]{11})"
+    # Updated regex to handle a broader range of YouTube URLs
+    pattern = r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})"
     match = re.search(pattern, url)
     return match.group(1) if match else None
+
 
 def show_downloader():
     st.markdown("<h1 style='text-align: center;'>🎥 YouTube Downloader</h1>", unsafe_allow_html=True)
